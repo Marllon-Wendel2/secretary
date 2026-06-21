@@ -1,4 +1,5 @@
 com/secretary/secretary/interfaces/web/SimulationController.class
+com/secretary/secretary/infra/whatsapp/WhatsappService.class
 com/secretary/secretary/domain/model/CycleStatus.class
 com/secretary/secretary/SecretaryApplication.class
 com/secretary/secretary/infra/repositorys/BankRepository.class
@@ -9,4 +10,5 @@ com/secretary/secretary/infra/repositorys/CreditCycleRepository.class
 com/secretary/secretary/domain/model/CreditCycle.class
 com/secretary/secretary/domain/model/Bank.class
 com/secretary/secretary/application/services/CommandProcessorService.class
+com/secretary/secretary/infra/schedulers/DailyCycleScheduler.class
 com/secretary/secretary/domain/model/Bank$BankBuilder.class
