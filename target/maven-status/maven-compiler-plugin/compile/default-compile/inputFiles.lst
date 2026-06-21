@@ -1,4 +1,9 @@
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/SecretaryApplication.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/ParsedCommandDto.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/services/CommandProcessorService.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/Bank.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/CreditCycle.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/CycleStatus.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/infra/repositorys/BankRepository.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/infra/repositorys/CreditCycleRepository.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/interfaces/web/SimulationController.java
