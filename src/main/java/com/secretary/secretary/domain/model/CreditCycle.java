@@ -42,19 +42,21 @@ public class CreditCycle {
     private CycleStatus status;
 
     @PrePersist
-    @PreUpdate
-    public void calculateDatesAndStatus() {
+    public void calculateDatesOnCreate() {
         if (this.startDate == null) {
             this.startDate = LocalDate.now();
         }
 
-        // First ruler: cycle by 10 days
         this.endDate = this.startDate.plusDays(10);
-
-        // Second ruler¨ if end date is in weekend back to friday
         this.adjustedEndDate = adjustToBusinnesDayPrior(this.endDate);
 
-        // Threed ruler: Updated status if not closer manual
+        if (this.status != CycleStatus.CLOSED) {
+            this.updateStatusBasedOnDate(LocalDate.now());
+        }
+    }
+
+    @PreUpdate
+    public void updateStatusOnModify() {
         if (this.status != CycleStatus.CLOSED) {
             this.updateStatusBasedOnDate(LocalDate.now());
         }

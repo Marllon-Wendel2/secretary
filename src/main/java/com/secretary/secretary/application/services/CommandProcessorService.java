@@ -2,6 +2,7 @@ package com.secretary.secretary.application.services;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,7 @@ import com.secretary.secretary.application.dtos.ParsedCommandDto;
 import com.secretary.secretary.domain.model.Bank;
 import com.secretary.secretary.domain.model.CreditCycle;
 import com.secretary.secretary.domain.model.CycleStatus;
+import com.secretary.secretary.infra.notification.NotificationService;
 import com.secretary.secretary.infra.repositorys.BankRepository;
 import com.secretary.secretary.infra.repositorys.CreditCycleRepository;
 
@@ -20,6 +22,10 @@ public class CommandProcessorService {
 
     private final BankRepository bankRepository;
     private final CreditCycleRepository creditCycleRepository;
+    private final NotificationService notificationService;
+
+    @Value("${secretary.mail.admin-email}")
+    private String adminEmail;
 
     @Transactional
     public String executeCommand(ParsedCommandDto command) {
@@ -47,6 +53,20 @@ public class CommandProcessorService {
                         .build();
 
                 creditCycleRepository.save(cycle);
+
+                notificationService.send(
+                        adminEmail,
+                        "Secretary - Novo Ciclo Criado",
+                        String.format(
+                                "Novo ciclo criado com sucesso!<br><br>" +
+                                        "<strong>Banco:</strong> %s<br>" +
+                                        "<strong>Valor:</strong> R$ %s<br>" +
+                                        "<strong>Data Início:</strong> %s<br>" +
+                                        "<strong>Vencimento:</strong> %s<br>" +
+                                        "<strong>Vencimento Real (ajustado):</strong> %s",
+                                bank.getName(), cycle.getAmount(), cycle.getStartDate(),
+                                cycle.getEndDate(), cycle.getAdjustedEndDate())
+                );
 
                 return String.format(
                         "Ciclo de R$ %s criado com sucesso para o %s. Vencimento padrão: %s | Vencimento real (antecipado se fim de semana): *%s*",
