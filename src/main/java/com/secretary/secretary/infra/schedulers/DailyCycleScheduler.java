@@ -30,7 +30,7 @@ public class DailyCycleScheduler {
     @Value("${secretary.mail.admin-email}")
     private String adminEmail;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 7,18 * * *")
     @Transactional
     public void processFinancialCycle() {
         log.info("Iniciando rotina automática diária de análise de ciclos financeiros...");
