@@ -1,6 +1,12 @@
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/SecretaryApplication.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/ParsedCommandDto.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/services/CommandProcessorService.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/BusinessException.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/ErrorResponse.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/InvalidCommandException.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/NotificationException.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/ResourceAlreadyExistsException.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/ResourceNotFoundException.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/Bank.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/CreditCycle.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/model/CycleStatus.java
@@ -13,4 +19,5 @@
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/infra/repositorys/CreditCycleRepository.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/infra/schedulers/DailyCycleScheduler.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/infra/whatsapp/WhatsappService.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/interfaces/web/GlobalExceptionHandler.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/interfaces/web/SimulationController.java

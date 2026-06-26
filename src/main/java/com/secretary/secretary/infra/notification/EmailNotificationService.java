@@ -3,13 +3,16 @@ package com.secretary.secretary.infra.notification;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import com.secretary.secretary.domain.exceptions.NotificationException;
 import com.secretary.secretary.infra.email.EmailService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class EmailNotificationService implements NotificationService {
 
     private final EmailService emailService;
@@ -34,8 +37,9 @@ public class EmailNotificationService implements NotificationService {
                 """.formatted(message);
         try {
             emailService.sendEmail(to, subject, htmlBody);
+            log.info("Email enviado com sucesso para {}", to);
         } catch (Exception e) {
-            throw new RuntimeException("Falha ao enviar email para " + to, e);
+            throw new NotificationException("email", to, e);
         }
     }
 }

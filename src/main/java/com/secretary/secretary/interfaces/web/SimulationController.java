@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.secretary.secretary.application.dtos.ParsedCommandDto;
 import com.secretary.secretary.application.services.CommandProcessorService;
+import com.secretary.secretary.domain.exceptions.ResourceAlreadyExistsException;
 import com.secretary.secretary.domain.model.Bank;
 import com.secretary.secretary.infra.repositorys.BankRepository;
 
@@ -25,7 +26,7 @@ public class SimulationController {
     @PostMapping("/setup-bank")
     public ResponseEntity<String> setupBank(@RequestParam String name) {
         if (bankRepository.findByNameIgnoreCaseAndActiveTrue(name).isPresent()) {
-            return ResponseEntity.ok("Banco já cadastrado!");
+            throw new ResourceAlreadyExistsException("Banco", "nome", name);
         }
         Bank bank = Bank.builder().name(name).active(true).build();
         bankRepository.save(bank);
@@ -34,11 +35,7 @@ public class SimulationController {
 
     @PostMapping("/command")
     public ResponseEntity<String> testCommand(@RequestBody ParsedCommandDto mockAiResponse) {
-        try {
-            String feedback = commandProcessorService.executeCommand(mockAiResponse);
-            return ResponseEntity.ok(feedback);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao executar comando: " + e.getMessage());
-        }
+        String feedback = commandProcessorService.executeCommand(mockAiResponse);
+        return ResponseEntity.ok(feedback);
     }
 }

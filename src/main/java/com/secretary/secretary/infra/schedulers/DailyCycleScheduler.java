@@ -4,27 +4,28 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.secretary.secretary.domain.exceptions.NotificationException;
 import com.secretary.secretary.domain.model.CreditCycle;
 import com.secretary.secretary.domain.model.CycleStatus;
 import com.secretary.secretary.infra.notification.NotificationService;
 import com.secretary.secretary.infra.repositorys.CreditCycleRepository;
-import com.secretary.secretary.infra.whatsapp.WhatsappService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class DailyCycleScheduler {
 
+    private static final Logger log = LoggerFactory.getLogger(DailyCycleScheduler.class);
+
     private final CreditCycleRepository cycleRepository;
-    private final WhatsappService whatsappService;
     private final NotificationService notificationService;
 
     @Value("${secretary.mail.admin-email}")
@@ -71,18 +72,15 @@ public class DailyCycleScheduler {
                     daysLeft, cycle.getBank().getName(), cycle.getAmount(), adjustedEndDate);
         }
 
-        // log.info("[WHATSAPP] Enviando mensagem para 5511999999999...");
-        // whatsappService.sendMessage("5511999999999", message);
-
         log.info("[EMAIL] Enviando email para {}...", adminEmail);
         String emailMessage = message.replace("*", "<strong>");
         String subject = daysLeft == 0 ? "Secretary - VENCIMENTO HOJE!" : "Secretary - Alerta de Ciclo";
+
         try {
             notificationService.send(adminEmail, subject, emailMessage);
             log.info("[EMAIL] Email enviado com sucesso para {}", adminEmail);
-        } catch (Exception e) {
+        } catch (NotificationException e) {
             log.error("[EMAIL] Falha ao enviar email para {}: {}", adminEmail, e.getMessage());
         }
     }
-
 }
