@@ -1,4 +1,7 @@
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/SecretaryApplication.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/BankResponseDto.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/CommandResponseDto.java
+/home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/CycleResponseDto.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/dtos/ParsedCommandDto.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/application/services/CommandProcessorService.java
 /home/marllon/projects/secretary/src/main/java/com/secretary/secretary/domain/exceptions/BusinessException.java

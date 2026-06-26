@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.secretary.secretary.application.dtos.CommandResponseDto;
+import com.secretary.secretary.application.dtos.CycleResponseDto;
 import com.secretary.secretary.application.dtos.ParsedCommandDto;
 import com.secretary.secretary.domain.exceptions.InvalidCommandException;
 import com.secretary.secretary.domain.exceptions.ResourceNotFoundException;
@@ -34,7 +36,7 @@ public class CommandProcessorService {
     private String adminEmail;
 
     @Transactional
-    public String executeCommand(ParsedCommandDto command) {
+    public CommandResponseDto executeCommand(ParsedCommandDto command) {
         if (command.getIntent() == null) {
             throw new InvalidCommandException("Intenção de comando não especificada de forma válida.");
         }
@@ -42,17 +44,17 @@ public class CommandProcessorService {
         String intent = command.getIntent().toUpperCase();
         log.info("Processando comando com intenção: {}", intent);
 
-        switch (intent) {
-            case "CREATE_CYCLE":
-                return handleCreateCycle(command);
-            case "CHECK_STATUS":
-                return "Consulta de estados pendente de implementação de layout.";
-            default:
-                throw new InvalidCommandException(intent, "Intenção de comando não reconhecida pelo sistema.");
-        }
+        return switch (intent) {
+            case "CREATE_CYCLE" -> handleCreateCycle(command);
+            case "CHECK_STATUS" -> CommandResponseDto.builder()
+                    .intent(intent)
+                    .message("Consulta de estados pendente de implementação de layout.")
+                    .build();
+            default -> throw new InvalidCommandException(intent, "Intenção de comando não reconhecida pelo sistema.");
+        };
     }
 
-    private String handleCreateCycle(ParsedCommandDto command) {
+    private CommandResponseDto handleCreateCycle(ParsedCommandDto command) {
         if (command.getBank() == null || command.getAmount() == null) {
             throw new InvalidCommandException("CREATE_CYCLE",
                     "Dados insuficientes para criar um ciclo. Certifique-se de informar o banco e o valor.");
@@ -74,9 +76,23 @@ public class CommandProcessorService {
 
         sendCycleCreatedNotification(bank, cycle);
 
-        return String.format(
-                "Ciclo de R$ %s criado com sucesso para o %s. Vencimento padrão: %s | Vencimento real (antecipado se fim de semana): *%s*",
-                cycle.getAmount(), bank.getName(), cycle.getEndDate(), cycle.getAdjustedEndDate());
+        CycleResponseDto cycleDto = CycleResponseDto.builder()
+                .id(cycle.getId())
+                .bankName(bank.getName())
+                .amount(cycle.getAmount())
+                .startDate(cycle.getStartDate())
+                .endDate(cycle.getEndDate())
+                .adjustedEndDate(cycle.getAdjustedEndDate())
+                .status(cycle.getStatus().name())
+                .build();
+
+        return CommandResponseDto.builder()
+                .intent("CREATE_CYCLE")
+                .message(String.format(
+                        "Ciclo de R$ %s criado com sucesso para o %s.",
+                        cycle.getAmount(), bank.getName()))
+                .cycle(cycleDto)
+                .build();
     }
 
     private void sendCycleCreatedNotification(Bank bank, CreditCycle cycle) {

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.secretary.secretary.application.dtos.BankResponseDto;
+import com.secretary.secretary.application.dtos.CommandResponseDto;
 import com.secretary.secretary.application.dtos.ParsedCommandDto;
 import com.secretary.secretary.application.services.CommandProcessorService;
 import com.secretary.secretary.domain.exceptions.ResourceAlreadyExistsException;
@@ -24,18 +26,25 @@ public class SimulationController {
     private final BankRepository bankRepository;
 
     @PostMapping("/setup-bank")
-    public ResponseEntity<String> setupBank(@RequestParam String name) {
+    public ResponseEntity<BankResponseDto> setupBank(@RequestParam String name) {
         if (bankRepository.findByNameIgnoreCaseAndActiveTrue(name).isPresent()) {
             throw new ResourceAlreadyExistsException("Banco", "nome", name);
         }
         Bank bank = Bank.builder().name(name).active(true).build();
         bankRepository.save(bank);
-        return ResponseEntity.ok("Banco " + name + " cadastrado com ID: " + bank.getId());
+
+        BankResponseDto response = BankResponseDto.builder()
+                .id(bank.getId())
+                .name(bank.getName())
+                .active(bank.isActive())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/command")
-    public ResponseEntity<String> testCommand(@RequestBody ParsedCommandDto mockAiResponse) {
-        String feedback = commandProcessorService.executeCommand(mockAiResponse);
-        return ResponseEntity.ok(feedback);
+    public ResponseEntity<CommandResponseDto> testCommand(@RequestBody ParsedCommandDto mockAiResponse) {
+        CommandResponseDto response = commandProcessorService.executeCommand(mockAiResponse);
+        return ResponseEntity.ok(response);
     }
 }
