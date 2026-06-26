@@ -38,5 +38,4 @@ out/
 .env
 application.properties
 
-# CORRIGIDO: ignora a pasta target inteira
 target/
