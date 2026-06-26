@@ -37,10 +37,6 @@ public class CommandProcessorService {
 
     @Transactional
     public CommandResponseDto executeCommand(ParsedCommandDto command) {
-        if (command.getIntent() == null) {
-            throw new InvalidCommandException("Intenção de comando não especificada de forma válida.");
-        }
-
         String intent = command.getIntent().toUpperCase();
         log.info("Processando comando com intenção: {}", intent);
 
@@ -55,11 +51,6 @@ public class CommandProcessorService {
     }
 
     private CommandResponseDto handleCreateCycle(ParsedCommandDto command) {
-        if (command.getBank() == null || command.getAmount() == null) {
-            throw new InvalidCommandException("CREATE_CYCLE",
-                    "Dados insuficientes para criar um ciclo. Certifique-se de informar o banco e o valor.");
-        }
-
         Bank bank = bankRepository.findByNameIgnoreCaseAndActiveTrue(command.getBank())
                 .orElseThrow(() -> new ResourceNotFoundException("Banco", "nome", command.getBank()));
 

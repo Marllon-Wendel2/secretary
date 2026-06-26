@@ -15,6 +15,7 @@ import com.secretary.secretary.domain.exceptions.ResourceAlreadyExistsException;
 import com.secretary.secretary.domain.model.Bank;
 import com.secretary.secretary.infra.repositorys.BankRepository;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -43,7 +44,7 @@ public class SimulationController {
     }
 
     @PostMapping("/command")
-    public ResponseEntity<CommandResponseDto> testCommand(@RequestBody ParsedCommandDto mockAiResponse) {
+    public ResponseEntity<CommandResponseDto> testCommand(@Valid @RequestBody ParsedCommandDto mockAiResponse) {
         CommandResponseDto response = commandProcessorService.executeCommand(mockAiResponse);
         return ResponseEntity.ok(response);
     }
